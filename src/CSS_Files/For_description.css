@@ -1,0 +1,94 @@
+.big0
+{
+    flex-direction: row;
+    justify-content: space-evenly;
+    display: flex;
+}
+
+.big1
+{
+    flex-direction: column;
+}
+
+.big2
+{
+    width: 18%;
+    margin-top: 20px;
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+    position: absolute;
+    right: 0px;
+}
+
+.big3
+{
+    display: none;
+}
+
+.card1
+{
+    width: 77%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+    padding-left: 2px;
+}
+
+
+
+@media only screen and (max-width:830px)
+{
+    .big0
+    {
+        flex-direction: column;
+    }
+    .big2
+    {
+        
+        display: none;
+    }
+    .big1
+    {
+        width: 100%;
+    }
+
+    .big3
+    {
+        display: block;
+    }
+
+    .card1
+    {
+        width: 95%;
+        
+    }
+
+    .infoBoxWhenSmall
+    {
+        width: 95%;
+        background-color: #FFF;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        margin-left: 20px;
+        padding-left: 2px;
+    }
+}
+
+@media only screen and (max-width:600px)
+{
+    .card1
+    {
+        margin-left: 10px;
+        font-size: 14px;
+    }
+
+    .infoBoxWhenSmall
+    {
+        
+        margin-left: 10px;
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,80 @@
+11/7/2023
+set up the project 
+search for a NL model - openAI, deepAI, huggingFace
+NLP model not found, at least not for free
+search for questions dataset - All the api's of codeforces,chef, leetcode, do not provide the question description or the rating
+Found an AI model on huggingFace, the aim of the model was to generate an answer to a coding question given the description, someone has webScraped the data of 6-7 websites and put them on the huggingFace server. 
+The data/ description can be obtained but there is no filter, like in an API for the difficulty or the topics used in the question.
+so, we have to fetch maximum of 100 rows and filter out the difficulty level on our own using custom functions.
+
+14/7
+made the question page UI (very basic and static)
+Used bootstrap cards
+The App.js only contains 3 components- Navbar, Filters and Cards
+Filter will contain the button to change difficulty and the Cards will contain the actual question name and previews.
+Designed the Navbar, the Filter buttons and added a single static card which shows Name, Difficulty, Time-Limit.
+
+15/7
+Tried to make the api work.
+The api returns maximum 100 rows from the dataset at once. It takes around 50 seconds to do it.
+When the length is 20, the time is around 10 seconds. which is quite reasonable. 
+I have some idea how to fecth more questions. Changing the offset and re-fectching and append the newly fectched response to the already fetched response. This will make the new dataset. This is a raw idea.
+Created a new component called CardRow. 
+In the Cards.js component, the API will be called and the response will be collected. The response will be iterated upon and each of the element will be sent to the CardRow component.
+Created "dataset" state variable and after getting response, it is populated.
+The dataset variable now contains the complete response got from the API. It also contains the feature names. The number of rows etc. The actualProblems need to be filtered out from the dataset.
+
+
+16/7
+Changing and extracting only the useful data from the dataset variable using useEffect.
+the state variable "actualProbs" contains the required data. 
+It is mapped and each one of the elements is sent to CardRow.
+
+17/7
+In some questions the "time_limit" could be null or 0 and "difficulty" could be 0 and the memory_limit is in bytes. 
+The names are changed because some of them are seperated by numbers and a dot (.)
+
+18/7
+To make every single card header a link to the description of a problem, useParams is used. The CardRow element is wrapped in a Link and the Description component catches the id using useParams.
+Converted it to INT and searched among all the problems for the particular problem with the specified "id" using .find function 
+
+19/7
+The description is set dangerously and if the description contains a YouTube link it is highlighted. Used the CSS styles-- whiteSpace:'pre-wrap' and textAlign:'left' to show the description and render it in a text-editor like manner. If pre-wrap is not used the instead of new-lines, the description shows '\n'
+
+20/7
+The information block is made and populated.
+Researched for the text-editor that I can use.
+IDEone is a good edior and compiler but I could not find a direct way to implement it. 
+Monaco is okay but difficult to integrate.
+Found an easy tutorial on Monaco- https://betterprogramming.pub/embedding-a-monaco-editor-inside-react-app-37083cf829e9
+The buttons to switch the language is made.
+
+21/7 
+The real problem is that on changing the code language from javaScript to Python and back to JavaScript, the code that was written by user in JavaScript is lost. 
+
+Fix:There is a state variable called "EditorValue" and everytime a keystroke is made the value is changed and the EditorValue variable saves whatever the user is typing. There are sate variables for each of the language that contain the saved data after the switch to a new language is made. 
+When button to change language is clicked, the dataSaver() function is called. It checks what language was the user coding in. and changes the saveState variables to the current editor value. After this is done, we have successfully saved the data. Now "codeLang" is changed. As soon as it is changed, a switch() for the codeLang is called which is used to handle the current/new language that the user wants to code in. We need to take care of the saveState variable for the new language also. So, we compare the saveState to the BOILERPLATE code. If saveState and BOILERPLATE are the same when the EditorValue is set to BOILERPLATE. In case there is a difference in the saveSate variable and BOILERPLATE, it means that the user had previously typed something in this language so we set the EditorValue to the saveState variable of the new language
+
+Example: Initially the codeLang was "javascript". as we type our code in JS the EditorValue continuously gets updated. As soon as we click the change language button and click on C++, the current EditorValue gets saved in the saveJS state variable. Then the codeLang is changed to "cpp". Now we compare the saveCPP value with CPP_BOILER_PLATE. Since we had previously never written any code in CPP, both of them will be equal. Now user will write their code in C++ and the editorValue will be changed accordingly. When the user clicks on javascript button again. The editorValue is dumped into saveCPP and then codeLang is changed to javascript. Then the saveJS state variable is compared to JS_BOILER_PLATE. Since they are not the same, we set the EditorValue to saveJS variable.
+
+22/7
+Designed the code judgement container. Improved basic designs and added mobile view. 
+
+23/7
+Researched for code comiler API's
+IDE one also has a code compiler. No elaborate documentation available.
+Sphere Engine has documentation but is paid.
+HackerEarth also has an API for code compilation but it needs an organization to actually use the API
+
+24/7 
+Rapid API has a code compiler API. 
+Looked into what the inputs and outpus are. 
+The the run button is clicked, only the sample inputs are checked. and when submit is clicked, all the inputs are checked.
+The limit of this API is 500 requests per month
+
+25/7
+A function called handleDifficultyChange goes as props into the Filters component. 
+
+
+
+

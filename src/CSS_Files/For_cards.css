@@ -1,0 +1,113 @@
+.card-body {
+    background-color: rgb(199, 199, 199);
+    margin-left: 10px;
+    margin-right: 10px;
+    /* width: 20%; */
+    transition: background-color 0.5s;
+    /* transition-timing-function: ease-in; */
+
+
+    /* setting the min-height to get uniform results */
+    min-height: 240px;
+}
+
+
+
+.card-green
+{
+    background-color: rgb(143, 236, 143);
+}
+
+.card-green:hover
+{
+    background-color: rgb(114, 187, 114);
+    cursor: pointer;
+}
+
+.card-orange
+{
+    background-color: rgb(220, 153, 108);
+}
+
+.card-orange:hover
+{
+    background-color: rgb(191, 132, 93);
+    cursor: pointer;
+}
+
+.card-red
+{
+    background-color: rgb(233, 108, 108);
+}
+
+.card-red:hover
+{
+    background-color: rgb(190, 89, 89);
+    cursor: pointer;
+}
+
+
+
+.problem-name {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.problem-footer {
+    margin-left: 10px;
+}
+
+.card-container {
+    /* display: flex; */
+    /* flex-direction: row; */
+    /* justify-content: center;
+    width: 100%; */
+    margin-top: 10px;
+}
+
+
+@media only screen and (max-width:515px)
+{
+    .card-container
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: center;
+    }
+    .card-body
+    {
+        /* width: 90%; */
+        margin-top: 5px;
+        margin-left: 30px;
+    }
+}
+
+
+
+
+@media only screen and (max-width:767px)
+{
+    .card-container
+    {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: center;
+    }
+    .card-body
+    {
+        /* width: 90%; */
+        margin-top: 5px;
+        margin-left: 70px;
+        max-height: 10px;
+    }
+    .problem-name
+    {
+        font-size: 20px;
+    }
+    .problem-footer
+    {
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,7 @@
+@media only screen and (max-width:767px)
+{
+    .dropdown-toggle
+    {
+        font-size: 14px;
+    }
+}

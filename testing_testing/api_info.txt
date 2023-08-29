@@ -1,0 +1,13 @@
+//for codeforces
+key: eb7361efc034a72d6b1025d6d37e1d697b67a5e0
+secret: 02f86a378105492b4acf1b1adfc2c798ceedd770
+
+//for chatGPT
+chat gpt api key:
+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
+
+organization name:
+Personal
+
+organization ID:
+org-FO9NR50GRY66fesJiPD6fuu6
