@@ -8,50 +8,95 @@ import Features from './Features';
 function Cards(props) {
     const {selectedDifficulty}=props;
     
-
     const [dataset, setDataset] = useState([]);
-
-    var probs = [];
 
     const [actualProbs, setActualProbs] = useState([]);
 
+    // Define lowerLimit and upperLimit based on selectedDifficulty
+    //initially --- 0 to 100 (easy --- 0 to 6) (medium --- 5 to 11) (hard --- 10 to 100) 
+    const [lowerLimit, setLowerLimit] = useState(0);
+    const [upperLimit, setUpperLimit] = useState(100);
 
-    async function query(API_TOKEN, offset) {
+    //the hugging face api is not working. Instead using npoint
+    //code_contests1
+    //https://api.npoint.io/0dcadbf81d0bde31b6e9
+    //code_contests2
+    //https://api.npoint.io/e4a4084faeb3ba4b4abf
+    //code_contests3
+    //https://api.npoint.io/974ecbf212f4c0b330a7
+
+    async function query() {
         try {
             const response = await fetch(
-                `https://datasets-server.huggingface.co/rows?dataset=deepmind%2Fcode_contests&config=default&split=train&offset=${offset}&limit=20`,
+                `https://api.npoint.io/974ecbf212f4c0b330a7`,
                 {
                     method: "GET"
                 }
             );
             const result = await response.json();
             setDataset(result);
-            // return result;
         }
         catch (e) {
             console.log(e);
         }
     }
 
-    // const API_TOKEN = "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";
-    //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
-    
-    const API_TOKEN="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";
+    function filterDataset() {
+        if (dataset && dataset.length > 0) {
+          const filteredProbs = dataset.filter(
+            (currElem) =>
+              currElem.difficulty > lowerLimit && currElem.difficulty < upperLimit
+          );
+          setActualProbs(filteredProbs);
+          setLoading(false);
+        }
+    }
 
-    var len_of_resp = 20;
-    const [offset, setOffset] = useState(0);
+    useEffect(() => {
+        query();
+    }, [selectedDifficulty]);
+
+    useEffect(() => {
+        filterDataset();
+        //eslint-disable-next-line
+    }, [dataset, selectedDifficulty, lowerLimit, upperLimit]);
+
+
+    useEffect(() => {
+        switch (selectedDifficulty) {
+          case 'Easy':
+            setLowerLimit(0);
+            setUpperLimit(6);
+            break;
+          case 'Medium':
+            setLowerLimit(5);
+            setUpperLimit(11);
+            break;
+          case 'Hard':
+            setLowerLimit(10);
+            setUpperLimit(100);
+            break;
+          case 'All':
+            setLowerLimit(0);
+            setUpperLimit(100);
+            break;
+          default:
+            setLowerLimit(0);
+            setUpperLimit(100);
+            break;
+        }
+    }, [selectedDifficulty]);
+
+    //now trying CHAT GPT CODE
+    /* 
 
     useEffect(() => {
         async function fetchData() {
-            await query(API_TOKEN, offset);
+            await query();
         }
         fetchData();
-    }, [offset]);
+    }, []);
 
-
-    
-    //new useEffect *************************************************************
-    //******************************************************** */
     
     //initially --- 0 to 100 easy --- 0 to 6 medium --- 5 to 11 hard --- 10 to 100 
     const [lowerLimit,setLowerLimit]=useState(1);
@@ -66,61 +111,30 @@ function Cards(props) {
             case "Easy":
                 setLowerLimit(0);
                 setUpperLimit(6);
+
                 
-                probs=[];
-                // setProbs([]);
-                setActualProbs([]);
-                setOffset(0);
-                setDataset([]);
-                
-                // console.log("Easy  ",lowerLimit," ",upperLimit);
-                // window.location.reload();
                 break;
             case "Medium":
                 setLowerLimit(5);
-                setUpperLimit(11);
-                
-                probs=[];
-                // setProbs([]);
-                setActualProbs([]);
-                setOffset(0);
-                setDataset([]);
-                
-                // console.log("Medium  ",lowerLimit," ",upperLimit);
-                // window.location.reload();
+                setUpperLimit(11);        
+
                 break;
             case "Hard":
                 setLowerLimit(10);
                 setUpperLimit(100);
-                
-                probs=[];
-                // setProbs([]);
-                setActualProbs([]);
-                setOffset(0);
-                setDataset([]);
-                
-                // console.log("Hard  ",lowerLimit," ",upperLimit);
-                // window.location.reload();
+
                 break;
             case "All":
                 setLowerLimit(0);
                 setUpperLimit(100);
-                
-                probs=[];
-                setActualProbs([]);
-                setOffset(0);
-                setDataset([]);
 
-                // console.log("All  ",lowerLimit," ",upperLimit);
                 break;
             default:
                 setLowerLimit(0);
                 setUpperLimit(100);
-                // console.log("Default  ",lowerLimit," ",upperLimit);
                 break;
         }
 
-        // window.location.reload();
     },[selectedDifficulty,lowerLimit,upperLimit])
 
 
@@ -130,96 +144,31 @@ function Cards(props) {
         console.log(dataset); // This will log the updated state when it changes
 
         try {
-            if (dataset && dataset.rows && dataset.rows.length > 0 ) {
-                const rowIndices = Object.keys(dataset.rows);
-
+            if (dataset &&  dataset.length > 0 ) {
                 //there will be a warning if we use the .map() without any return statement. so I have disable the warning through this comment
-
                 // eslint-disable-next-line
-                rowIndices.map((currElem) => { dataset.rows[currElem].row["row_idx"] = dataset.rows[currElem].row_idx;  probs.push(dataset.rows[currElem].row);  });
+                //uncomment this line if error// dataset.map((currElem) => { setActualProbs((prevActualProbs)=>{ prevActualProbs.concat(currElem) })});
 
-                ///////////////////////////////////////////////////////
-                var filteredProbs=probs.filter((currElem)=>currElem.difficulty >lowerLimit && currElem.difficulty <upperLimit);
-                setActualProbs((probs2)=>probs2.concat(filteredProbs));
-                setOffset((prevOffset)=>prevOffset+len_of_resp);
-                
-                
-                if(actualProbs.length>1000)
-                {
-                    setActualProbs((prevActualProbs) => {
-                        const newActualProbs = prevActualProbs.concat(filteredProbs);
-                        return newActualProbs.slice(0, 1000); // Ensure it contains at most 1000 items
-                    });
-                    // setVodka(!vodka);
-                    
-                }
+                setActualProbs(dataset);
 
+                var filteredProbs=actualProbs.filter((currElem)=>currElem.difficulty >lowerLimit && currElem.difficulty <upperLimit) 
                 
+                console.log(lowerLimit+"  "+upperLimit);
+                console.log(filteredProbs);
 
                 setLoading(false);
-                
             }
         } catch (e) {
             console.log(e);
         }
         //eslint-disable-next-line
     }, [dataset,lowerLimit,upperLimit]);
-
-
-    /*
-    useEffect(() => {
-        console.log(dataset); // This will log the updated state when it changes
-
-        try {
-            if (dataset && dataset.rows && dataset.rows.length > 0) {
-                const rowIndices = Object.keys(dataset.rows);
-
-                //there will be a warning if we use the .map() without any return statement. so I have disable the warning through this comment
-
-                // eslint-disable-next-line
-                rowIndices.map((currElem) => { dataset.rows[currElem].row["row_idx"] = dataset.rows[currElem].row_idx;  probs.push(dataset.rows[currElem].row);  });
-
-                ///////////////////////////////////////////////////////
-                var filteredProbs=probs.filter((currElem)=>currElem.difficulty >10 && currElem.difficulty <100);
-                setActualProbs((probs2)=>probs2.concat(filteredProbs));
-
-                setLoading(false); //ye wala tha
-
-                if(actualProbs.length<20)
-                {
-                    setOffset((prevOffset)=>prevOffset+len_of_resp);
-                }
-                if(actualProbs.length>20)
-                {
-                    // setActualProbs(actualProbs.slice(0,20));
-                    setActualProbs((prevActualProbs) => {
-                        const newActualProbs = prevActualProbs.concat(filteredProbs);
-                        return newActualProbs.slice(0, 20); // Ensure it contains at most 20 items
-                    });
-                }
-
-                // setLoading(false);
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    }, [dataset]);
+    
     */
-
-
-    // useEffect(()=>{
-    //     if(probs.length>0)
-    //     {
-    //         var filteredProbs=probs.filter((currElem)=>currElem.difficulty >1 && currElem.difficulty <5);
-    //         setActualProbs(filteredProbs.slice(0, 20)); // Take the first 20 filtered questions
-    //         setLoading(false);
-    //     }
-    // },[probs]);
-
-
-
+   //NOW ENDED TRYING CHAT GPT CODE
 
     const [loading, setLoading] = useState(true);
+
     if (loading) {
 
         return (

@@ -76,5 +76,36 @@ The limit of this API is 500 requests per month
 A function called handleDifficultyChange goes as props into the Filters component. 
 
 
+23/8
+The huggingFace API suddenly stopped working, I opened a issue in the discussion about the unavailability but received no reply
 
+26/8
+The API is back up again, this time the URL of the API was changed and the 'length' query parameter was removed. After minor changes in the project, and handling of the dataset, the website is online again
 
+13/7
+The new URL of the huggingFace API is responding "{"error":"Unexpected error."}" .
+After pinging the creator, MarioSasko, all I received was a comment tagging another employee. The issue is not fixed.
+
+14/7 
+The webscraped data is available on the github in the form of paraquet files.
+I have downloaded the train-00000 data files and converted this into json using 'pyarrow.paraquet' 
+
+15/7 
+Looking for tools to upload this json file in the form of an API. 
+Found some websites: 
+https://extendsclass.com/json-storage.html
+https://jsonbin.io/login
+https://jsonblob.com/
+https://www.npoint.io/
+
+16/7
+n point is the most simple. 
+Uploaded a small part of the train-00000 dataset on npoint. It is very quick and simple. 
+The code needs to be changed a little.
+Each time the user selects a different difficulty, this API needs to be called again and the results will be filtered based on the limits
+Earlier, the data that I had received from the huggingFace API needed to be saved because the API response time was quite slow.
+Since, n point is faster, I can fetch it again and again without a problem.
+
+17/7 
+After testing on a small part, the entire train-00000 is now converted into an 'n point' API.
+After updating the repository, the website is online once again. Now for GOOD 😁😁
