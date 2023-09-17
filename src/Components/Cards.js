@@ -87,88 +87,9 @@ function Cards(props) {
         }
     }, [selectedDifficulty]);
 
-    //now trying CHAT GPT CODE
-    /* 
-
-    useEffect(() => {
-        async function fetchData() {
-            await query();
-        }
-        fetchData();
-    }, []);
-
-    
-    //initially --- 0 to 100 easy --- 0 to 6 medium --- 5 to 11 hard --- 10 to 100 
-    const [lowerLimit,setLowerLimit]=useState(1);
-    const [upperLimit,setUpperLimit]=useState(101);
-
-    
-
-    //we need to extract the difficulty of questions that the user has chosen
-    useEffect(()=>{
-        
-        switch(selectedDifficulty){
-            case "Easy":
-                setLowerLimit(0);
-                setUpperLimit(6);
-
-                
-                break;
-            case "Medium":
-                setLowerLimit(5);
-                setUpperLimit(11);        
-
-                break;
-            case "Hard":
-                setLowerLimit(10);
-                setUpperLimit(100);
-
-                break;
-            case "All":
-                setLowerLimit(0);
-                setUpperLimit(100);
-
-                break;
-            default:
-                setLowerLimit(0);
-                setUpperLimit(100);
-                break;
-        }
-
-    },[selectedDifficulty,lowerLimit,upperLimit])
-
-
-    //now extracted the difficulty of questions that the user has chosen
-
-    useEffect(() => {
-        console.log(dataset); // This will log the updated state when it changes
-
-        try {
-            if (dataset &&  dataset.length > 0 ) {
-                //there will be a warning if we use the .map() without any return statement. so I have disable the warning through this comment
-                // eslint-disable-next-line
-                //uncomment this line if error// dataset.map((currElem) => { setActualProbs((prevActualProbs)=>{ prevActualProbs.concat(currElem) })});
-
-                setActualProbs(dataset);
-
-                var filteredProbs=actualProbs.filter((currElem)=>currElem.difficulty >lowerLimit && currElem.difficulty <upperLimit) 
-                
-                console.log(lowerLimit+"  "+upperLimit);
-                console.log(filteredProbs);
-
-                setLoading(false);
-            }
-        } catch (e) {
-            console.log(e);
-        }
-        //eslint-disable-next-line
-    }, [dataset,lowerLimit,upperLimit]);
-    
-    */
-   //NOW ENDED TRYING CHAT GPT CODE
-
     const [loading, setLoading] = useState(true);
 
+    //if the page is loading, we show the placeholder cards
     if (loading) {
 
         return (

@@ -28,7 +28,7 @@ function Navbar() {
                                     Support
                                 </button>
                                 <ul className="dropdown-menu">
-                                    <li><a className="dropdown-item text-center item-1" href="https://github.com/sankalpie"><i className="fas fa-brands fa-github fa-fade"></i> Github</a></li>
+                                    <li><a className="dropdown-item text-center item-1" href="https://github.com/sankalpie/PiNacle-Coder-v2"><i className="fas fa-brands fa-github fa-fade"></i> Github</a></li>
                                     <li><a className="dropdown-item text-center item-2" href="https://www.linkedin.com/in/sankalp-pareek-92a473238/"><i className="fa-brands fa-linkedin fa-beat"></i> LinkedIn</a></li>
                                     <li><a className="dropdown-item text-center item-3" href="https://www.instagram.com/sankalpie/"><i className="fa-brands fa-instagram fa-bounce"></i> Instagram</a></li>
                                 </ul>

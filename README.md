@@ -11,6 +11,11 @@
     - The Time Limit, Memory Limit, Tags 
     - A code editor to write code with support for C++, Java, JavaScript and Python 👩‍💻
     - A results section which provides the judgement based on the solution coded by the user (button turns 🟠 when sample test cases pass and 🟢 when ALL test cases pass)
+    
+# Getting Started
+1. Clone the repository
+2. Install the dependencies using npm `npm i` or yarn `yarn install`
+3. Use the existing API (n point) or upload make your own API. The structure of the api must be as follows: [Hugging Face API](https://huggingface.co/datasets/deepmind/code_contests)
 
 # Tech-Stacks Used
 ### Front-end
@@ -25,6 +30,17 @@ The dataset is fetched from HuggingFace Deepmind Code-Contests dataset
 > * [RapidAPI code compiler](https://rapidapi.com/Glavier/api/online-code-compiler/pricing)
 ### External Libraries/Plugins
 > * [Monaco-editor-react](https://microsoft.github.io/monaco-editor/)
+
+# Getting Help
+For any dataset related issue, visit [HF Discussions](https://huggingface.co/datasets/deepmind/code_contests/discussions).
+
+For code related issues/ questions or documentations visit 
+
+[![GitHub](https://img.shields.io/badge/GitHub-Profile-blue?style=for-the-badge&logo=github)](https://github.com/sankalpie)
+
+[![Instagram](https://img.shields.io/badge/Instagram-Profile-purple?style=for-the-badge&logo=instagram)](https://www.instagram.com/sankalpie/)
+
+
 
 ***
 `For the entire Timeline of the project refer to "track_record" `
