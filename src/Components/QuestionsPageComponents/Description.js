@@ -335,72 +335,57 @@ public class Ideone
   const [runOrSubmit,setRunOrSubmit]=useState("N/A");
   const [didCodePass,setDidCodePass]=useState(0);  //didCodePass status code 0-code unrun, 1-fail, 2-pass in public_tests 3-pass in private_tests
 
-  async function query2(runThisCode,runLang,inp)
+  async function query2(runThisCode,runLang,inp,versionIndex)
   {
-      const response=await fetch(
-          'https://online-code-compiler.p.rapidapi.com/v1/',
-          {
-              headers: {
-                  'content-type': 'application/json',
-                  'X-RapidAPI-Key': '8f9165482fmsh7495ad9099aeb42p1ee2c5jsn62cf9df9542b',
-                  'X-RapidAPI-Host': 'online-code-compiler.p.rapidapi.com'
-              },
-              method:'POST',
-              body: JSON.stringify({
-  language: runLang,
-  version_index: 5,
-  code: runThisCode,
-  input: inp
-})
-          }
-      );
-    
-
+      const response = await fetch(
+        'https://online-code-compiler.p.rapidapi.com/v1/',
+        {
+            headers: {
+                'content-type': 'application/json',
+                'X-RapidAPI-Key': '8f9165482fmsh7495ad9099aeb42p1ee2c5jsn62cf9df9542b',
+                'X-RapidAPI-Host': 'online-code-compiler.p.rapidapi.com'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                language: runLang,
+                version_index: versionIndex,   // ✅ now per-language
+                code: runThisCode,
+                input: inp
+            })
+        }
+    );
       const result=await response.json();
       setResult(result);
       setQuery2Executed(true);
   }
 
 
-  async function codeRunner(inp)
-  {
-    // setFinalSubmit(editorValue);
-    var runLang="cpp17";
-    // console.log(codeLang);
+  async function codeRunner(inp) {
+    var runLang;
+    var versionIndex;
 
-    if(codeLang==="javascript")
-    {
-      runLang="nodejs";
+    if (codeLang === "javascript") {
+        runLang = "nodejs";
+        versionIndex = 6;       // ✅ from error message
+    } else if (codeLang === "cpp") {
+        runLang = "cpp17";
+        versionIndex = 2;       // ✅ from error message
+    } else if (codeLang === "java") {
+        runLang = "java";
+        versionIndex = 5;       // ✅ from error message
+    } else if (codeLang === "python") {
+        runLang = "python3";
+        versionIndex = 5;       // ✅ from error message
     }
-    else if(codeLang==="cpp")
-    {
-      runLang="cpp17";
-    }
-    else if(codeLang==="java")
-    {
-      runLang="java";
-    }
-    else if(codeLang==="python")
-    {
-      runLang="python3";
-    }
-    // console.log(runLang);
-    // console.log("final submit hai "+finalSubmit);
-    // console.log("editor value hai "+editorValue);
-    if(inp===sample_input)
-    {
+
+    if (inp === sample_input) {
         setRunOrSubmit("run");
-        // console.log("yaar inp===sample_input toh ho gaya confirm");
-        // console.log(runOrSubmit);
-    }
-    else if(inp===internal_input)
-    {
+    } else if (inp === internal_input) {
         setRunOrSubmit("submit");
-        // console.log("inp===internal_input");
-        // console.log(runOrSubmit);
     }
-    await query2(editorValue,runLang,inp);
-  }
+
+    await query2(editorValue, runLang, inp, versionIndex);
+}
 
   useEffect(()=>{
     if(query2Executed)
