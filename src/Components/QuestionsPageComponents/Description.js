@@ -223,7 +223,7 @@ public class Ideone
 
     // ✅ Judge0 CE via RapidAPI
     async function query2(runThisCode, languageId, inp) {
-        const RAPIDAPI_KEY = "YOUR_RAPIDAPI_KEY_HERE"; // 🔑 Replace with your key
+        const RAPIDAPI_KEY = "8f9165482fmsh7495ad9099aeb42p1ee2c5jsn62cf9df9542b"; // 🔑 Replace with your key
 
         const response = await fetch(
             "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
