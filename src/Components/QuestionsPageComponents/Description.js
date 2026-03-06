@@ -365,16 +365,16 @@ public class Ideone
   async function codeRunner(inp)
   {
     // setFinalSubmit(editorValue);
-    var runLang="cpp17";
+    var runLang="cpp";
     // console.log(codeLang);
 
     if(codeLang==="javascript")
     {
-      runLang="nodejs";
+      runLang="javascript";
     }
     else if(codeLang==="cpp")
     {
-      runLang="cpp17";
+      runLang="cpp";
     }
     else if(codeLang==="java")
     {
@@ -382,7 +382,7 @@ public class Ideone
     }
     else if(codeLang==="python")
     {
-      runLang="python3";
+      runLang="python";
     }
     // console.log(runLang);
     // console.log("final submit hai "+finalSubmit);
