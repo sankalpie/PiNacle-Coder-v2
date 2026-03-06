@@ -348,7 +348,7 @@ public class Ideone
               method:'POST',
               body: JSON.stringify({
   language: runLang,
-  version: 'latest',
+  version_index: 5,
   code: runThisCode,
   input: inp
 })
