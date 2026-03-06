@@ -167,16 +167,10 @@ public class Ideone
     useEffect(() => {
         switch (codeLang) {
             case "javascript":
-                if (saveJS === JSBOILER) {
-                    setEditorValue(`//write your JavaScript code here`);
-                } else {
-                    setEditorValue(saveJS);
-                }
+                setEditorValue(saveJS === JSBOILER ? `//write your JavaScript code here` : saveJS);
                 break;
-
             case "cpp":
-                if (saveCPP === CPPBOILER) {
-                    setEditorValue(`#include<bits/stdc++.h>
+                setEditorValue(saveCPP === CPPBOILER ? `#include<bits/stdc++.h>
 
 using namespace std;
                         
@@ -184,15 +178,10 @@ int main()
 {
   //write your C++ code here
   return 0;
-}`);
-                } else {
-                    setEditorValue(saveCPP);
-                }
+}` : saveCPP);
                 break;
-
             case "java":
-                if (saveJAVA === JAVABOILER) {
-                    setEditorValue(`/* package whatever; // don't place package name! */
+                setEditorValue(saveJAVA === JAVABOILER ? `/* package whatever; // don't place package name! */
 
 import java.util.*;
 import java.lang.*;
@@ -205,20 +194,11 @@ public class Ideone
   {
     // your code goes here
   }
-}`);
-                } else {
-                    setEditorValue(saveJAVA);
-                }
+}` : saveJAVA);
                 break;
-
             case "python":
-                if (savePython === PYTHONBOILER) {
-                    setEditorValue(`#write your Python code here`);
-                } else {
-                    setEditorValue(savePython);
-                }
+                setEditorValue(savePython === PYTHONBOILER ? `#write your Python code here` : savePython);
                 break;
-
             default:
                 break;
         }
@@ -229,69 +209,64 @@ public class Ideone
     };
 
     function dataSaver() {
-        if (codeLang === "python") {
-            setSavePython(editorValue);
-        } else if (codeLang === "javascript") {
-            setSaveJS(editorValue);
-        } else if (codeLang === "cpp") {
-            setSaveCPP(editorValue);
-        } else if (codeLang === "java") {
-            setSaveJAVA(editorValue);
-        }
+        if (codeLang === "python") setSavePython(editorValue);
+        else if (codeLang === "javascript") setSaveJS(editorValue);
+        else if (codeLang === "cpp") setSaveCPP(editorValue);
+        else if (codeLang === "java") setSaveJAVA(editorValue);
     }
 
     /**********************************************************/
-    const [result, setResult] = useState([]);
+    const [result, setResult] = useState(null);
     const [query2Executed, setQuery2Executed] = useState(false);
     const [runOrSubmit, setRunOrSubmit] = useState("N/A");
     const [didCodePass, setDidCodePass] = useState(0);
 
-    // ✅ Updated to use Piston API
-    async function query2(runThisCode, runLang, inp) {
-        const langMap = {
-            nodejs:  { language: "javascript", version: "18.15.0" },
-            cpp17:   { language: "cpp",        version: "10.2.0"  },
-            java:    { language: "java",       version: "15.0.2"  },
-            python3: { language: "python",     version: "3.10.0"  },
-        };
+    // ✅ Judge0 CE via RapidAPI
+    async function query2(runThisCode, languageId, inp) {
+        const RAPIDAPI_KEY = "YOUR_RAPIDAPI_KEY_HERE"; // 🔑 Replace with your key
 
-        const { language, version } = langMap[runLang];
-
-        const response = await fetch("https://emkc.org/api/v2/piston/execute", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                language: language,
-                version: version,
-                files: [{ content: runThisCode }],
-                stdin: inp ?? ""
-            })
-        });
+        const response = await fetch(
+            "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-RapidAPI-Key": RAPIDAPI_KEY,
+                    "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com"
+                },
+                body: JSON.stringify({
+                    language_id: languageId,
+                    source_code: runThisCode,
+                    stdin: inp ?? ""
+                })
+            }
+        );
 
         const data = await response.json();
 
-        // Piston returns output in data.run.output
-        const output = data.run?.output ?? "";
+        // stdout is the normal output; fall back to stderr or compile_output on error
+        const output = data.stdout ?? data.stderr ?? data.compile_output ?? "No output";
+
         setResult({
             output: output,
-            cpuTime: null,   // Piston doesn't return cpu time
-            memory: null     // Piston doesn't return memory
+            cpuTime: data.time ?? null,       // ✅ Judge0 returns time in seconds e.g. "0.016"
+            memory: data.memory ?? null        // ✅ Judge0 returns memory in KB e.g. 7392
         });
         setQuery2Executed(true);
     }
 
-    // ✅ Updated codeRunner — no more versionIndex needed for Piston
+    // ✅ Language ID map based on the Judge0 CE language list you provided
     async function codeRunner(inp) {
-        var runLang;
+        var languageId;
 
         if (codeLang === "javascript") {
-            runLang = "nodejs";
+            languageId = 93;   // JavaScript (Node.js 18.15.0)
         } else if (codeLang === "cpp") {
-            runLang = "cpp17";
+            languageId = 54;   // C++ (GCC 9.2.0)
         } else if (codeLang === "java") {
-            runLang = "java";
+            languageId = 91;   // Java (JDK 17.0.6)
         } else if (codeLang === "python") {
-            runLang = "python3";
+            languageId = 92;   // Python (3.11.2)
         }
 
         if (inp === sample_input) {
@@ -300,12 +275,12 @@ public class Ideone
             setRunOrSubmit("submit");
         }
 
-        await query2(editorValue, runLang, inp);
+        await query2(editorValue, languageId, inp);
     }
 
     useEffect(() => {
-        if (query2Executed) {
-            var { cpuTime, memory, output } = result;
+        if (query2Executed && result) {
+            const { cpuTime, memory, output } = result;
             setCpuTime(cpuTime);
             setMemory(memory);
             setShowOutput(output);
@@ -321,18 +296,20 @@ public class Ideone
 
     useEffect(() => {
         if (evalOutput !== "N/A" && runOrSubmit !== "N/A") {
-            if ((runOrSubmit === "run") && (evalOutput === sample_output)) {
+            if ((runOrSubmit === "run") && (evalOutput === sample_output) && (parseFloat(cpuTime) <= time_limit) && (memory <= memory_limit / 1024)) {
                 setDidCodePass(2);
-            } else if ((runOrSubmit === "submit") && (evalOutput === internal_output)) {
+            } else if ((runOrSubmit === "submit") && (evalOutput === internal_output) && (parseFloat(cpuTime) <= time_limit) && (memory <= memory_limit / 1024)) {
                 setDidCodePass(3);
-            } else if ((runOrSubmit === "run" && evalOutput !== sample_output) || (runOrSubmit === "submit" && evalOutput !== internal_output)) {
+            } else if (
+                (runOrSubmit === "run" && evalOutput !== sample_output) ||
+                (runOrSubmit === "submit" && evalOutput !== internal_output)
+            ) {
                 setDidCodePass(1);
             }
         } else if (evalOutput === "N/A") {
             setDidCodePass(0);
         }
-    // ✅ Removed cpuTime/memory/time_limit/memory_limit from deps since Piston doesn't return them
-    }, [evalOutput, runOrSubmit, internal_output, sample_output]);
+    }, [evalOutput, runOrSubmit, internal_output, sample_output, cpuTime, memory, time_limit, memory_limit]);
 
     /**********************************************************/
     const [didCodePassColor, setDidCodePassColor] = useState("pink");
@@ -426,13 +403,13 @@ public class Ideone
                         <div className='container' style={{ display: 'flex', flexDirection: 'row' }}>
                             <div style={{ width: '50%' }}>
                                 <ul style={{ listStyleType: 'none' }}>
-                                    {/* ✅ CPU time and memory shown as N/A since Piston doesn't provide them */}
-                                    <li><b>CPU TIME:</b> <p>N/A</p></li>
-                                    <li><b>MEMORY:</b> <p>N/A</p></li>
-                                    <li><b>OUTPUT:</b> <pre style={{ whiteSpace: 'pre-wrap' }}>{showOutput} </pre></li>
+                                    {/* ✅ Judge0 returns real cpu time and memory */}
+                                    <li><b>CPU TIME:</b> {cpuTime === null ? <p>N/A</p> : <p>{cpuTime}s</p>}</li>
+                                    <li><b>MEMORY:</b> {memory === null ? <p>N/A</p> : <p>{memory} KB</p>}</li>
+                                    <li><b>OUTPUT:</b> <pre style={{ whiteSpace: 'pre-wrap' }}>{showOutput}</pre></li>
                                 </ul>
                             </div>
-                            <div type="button" className='btn' style={{ textAlign: 'center', width: '50%', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', backgroundColor: `${didCodePassColor}`, color: 'white', maxWidth: '400px' }} >
+                            <div type="button" className='btn' style={{ textAlign: 'center', width: '50%', justifyContent: 'center', alignItems: 'center', alignSelf: 'center', backgroundColor: `${didCodePassColor}`, color: 'white', maxWidth: '400px' }}>
                                 <b>{didCodePassText}</b>
                             </div>
                         </div>
