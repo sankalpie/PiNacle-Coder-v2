@@ -347,11 +347,11 @@ public class Ideone
               },
               method:'POST',
               body: JSON.stringify({
-                  language: `${runLang}`,//python3 //cpp17 //java //nodejs
-                  version: 'latest', // latest
-                  code: `${runThisCode}`,
-                  input: `${inp}`
-              })
+  language: runLang,
+  version_index: "6",
+  code: runThisCode,
+  input: inp
+})
           }
       );
     
